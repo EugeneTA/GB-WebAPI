@@ -1,10 +1,18 @@
 ﻿using MetricsAgent.Controllers;
+using MetricsAgent.Services.Implemetation;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MetricsAgent.Services;
+using MetricsAgent.Models;
+using Moq;
 
 namespace MetricsAgentTests
 {
@@ -15,19 +23,52 @@ namespace MetricsAgentTests
     public class CpuMetricsControllerTests
     {
         private CpuMetricsController _cpuMetricsController;
+        private Mock<ILogger<CpuMetricsController>> _logger;
+        private Mock<ICpuMetricsRepository> _repository;
 
         public CpuMetricsControllerTests()
         {
-            _cpuMetricsController = new CpuMetricsController();
+            _logger = new Mock<ILogger<CpuMetricsController>>();
+            _repository = new Mock<ICpuMetricsRepository>();
+            _cpuMetricsController = new CpuMetricsController(_repository.Object, _logger.Object);
+        }
+
+        //[Fact]
+        //public void GetCpuMetrics_ReturnOk()
+        //{
+        //    TimeSpan fromTime = TimeSpan.FromSeconds(0);
+        //    TimeSpan toTime = TimeSpan.FromSeconds(100);
+        //    var result = _cpuMetricsController.GetCpuMetrics(fromTime, toTime);
+        //    Assert.IsAssignableFrom<IActionResult>(result);
+        //}
+
+        [Fact]
+        public void CpuMetricsController_CreateTest()
+        {
+            _repository.Setup(repository => repository.Create(It.IsAny<CpuMetric>())).Verifiable();
+
+            var result = _cpuMetricsController.Create(new MetricsAgent.Models.Requests.CpuMetricCreateRequest { Time = TimeSpan.FromSeconds(10), Value = 25 });
+
+            _repository.Verify(repository => repository.Create(It.IsAny<CpuMetric>()), Times.AtMostOnce());
         }
 
         [Fact]
-        public void GetCpuMetrics_ReturnOk()
+        public void CpuMetricsController_GetTest()
         {
-            TimeSpan fromTime = TimeSpan.FromSeconds(0);
-            TimeSpan toTime = TimeSpan.FromSeconds(100);
-            var result = _cpuMetricsController.GetCpuMetrics(fromTime, toTime);
-            Assert.IsAssignableFrom<IActionResult>(result);
+            Assert.IsAssignableFrom<ActionResult<IList<CpuMetric>>>(_cpuMetricsController.GetCpuMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
         }
+
+        [Fact]
+        public void CpuMetricsController_DeleteTest()
+        {
+            _repository.Setup(repository => repository.Delete(It.IsAny<int>())).Verifiable();
+
+            var result = _cpuMetricsController.Delete(new MetricsAgent.Models.Requests.Delete.CpuMetricDeleteRequest { Id = 1 });
+
+            _repository.Verify(repository => repository.Delete(It.IsAny<int>()), Times.AtMostOnce());
+        }
+
     }
+
+
 }

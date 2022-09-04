@@ -8,23 +8,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MetricsAgent.Controllers
 {
-    // api / metrics / hdd / left / from /{ fromTime}/ to /{ toTime}
+    // api / metrics / ram / available / from /{ fromTime}/ to /{ toTime}
 
-    [Route("api/metrics/hdd/left")]
+    [Route("api/metrics/ram/available")]
     [ApiController]
-    public class HddMetricsController : ControllerBase
+    public class RamMetricsController : ControllerBase
     {
         #region Services
 
-        private readonly ILogger<HddMetricsController> _logger;
-        private readonly IHddMetricsRepository _hddMetricsRepository;
+        private readonly ILogger<RamMetricsController> _logger;
+        private readonly IRamMetricsRepository _ramMetricsRepository;
 
         #endregion
 
-        public HddMetricsController(IHddMetricsRepository hddMetricsRepository, ILogger<HddMetricsController> logger)
+        public RamMetricsController(IRamMetricsRepository ramMetricsRepository, ILogger<RamMetricsController> logger)
         {
             _logger = logger;
-            _hddMetricsRepository = hddMetricsRepository;
+            _ramMetricsRepository = ramMetricsRepository;
         }
 
         /// <summary>
@@ -33,14 +33,14 @@ namespace MetricsAgent.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("create")]
-        public IActionResult Create([FromBody] HddMetricCreateRequest request)
+        public IActionResult Create([FromBody] RamMetricCreateRequest request)
         {
-            _hddMetricsRepository.Create(new Models.HddMetric
+            _ramMetricsRepository.Create(new Models.RamMetric
             {
                 Value = request.Value,
                 Time = (int)request.Time.TotalSeconds
             });
-            _logger.LogInformation("Create hdd metrics add to repository call.");
+            _logger.LogInformation("Create ram metrics add to repository call.");
             return Ok();
         }
 
@@ -50,25 +50,24 @@ namespace MetricsAgent.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("delete")]
-        public IActionResult Delete([FromBody] HddMetricDeleteRequest request)
+        public IActionResult Delete([FromBody] RamMetricDeleteRequest request)
         {
-            _hddMetricsRepository.Delete(request.Id);
-            _logger.LogInformation("Delete hdd metric call.");
+            _ramMetricsRepository.Delete(request.Id);
+            _logger.LogInformation("Delete ram metric call.");
             return Ok();
         }
 
         /// <summary>
-        /// Получить статистику по нагрузке на HDD за период
+        /// Получить статистику по загрузке памяти за период
         /// </summary>
         /// <param name="fromTime">Время начала периода</param>
         /// <param name="toTime">Время окончания периода</param>
         /// <returns></returns>
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public ActionResult<IList<HddMetric>> GetHddMetrics(
-            [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+        public ActionResult<IList<RamMetric>> GetRamMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            _logger.LogInformation("Get hdd metrics call.");
-            return Ok(_hddMetricsRepository.GetByTimePeriod(fromTime,toTime));
+            _logger.LogInformation("Get ram metrics call.");
+            return Ok(_ramMetricsRepository.GetByTimePeriod(fromTime, toTime));
         }
     }
 }
