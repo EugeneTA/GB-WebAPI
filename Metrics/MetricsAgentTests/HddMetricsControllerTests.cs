@@ -1,5 +1,7 @@
-﻿using MetricsAgent.Controllers;
+﻿using AutoMapper;
+using MetricsAgent.Controllers;
 using MetricsAgent.Models;
+using MetricsAgent.Models.Dto;
 using MetricsAgent.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,12 +18,14 @@ namespace MetricsAgentTests
         private HddMetricsController _hddMetricsController;
         private Mock<ILogger<HddMetricsController>> _logger;
         private Mock<IHddMetricsRepository> _repository;
+        private Mock<IMapper> _mapper;
 
         public HddMetricsControllerTests()
         {
             _logger = new Mock<ILogger<HddMetricsController>>();
             _repository = new Mock<IHddMetricsRepository>();
-            _hddMetricsController = new HddMetricsController(_repository.Object, _logger.Object);
+            _mapper = new Mock<IMapper>();
+            _hddMetricsController = new HddMetricsController(_repository.Object, _logger.Object, _mapper.Object);
         }
 
         //[Fact]
@@ -45,7 +49,7 @@ namespace MetricsAgentTests
         [Fact]
         public void HddMetricsController_GetTest()
         {
-            Assert.IsAssignableFrom<ActionResult<IList<HddMetric>>>(_hddMetricsController.GetHddMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
+            Assert.IsAssignableFrom<ActionResult<IList<HddMetricDto>>>(_hddMetricsController.GetHddMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
         }
 
         [Fact]

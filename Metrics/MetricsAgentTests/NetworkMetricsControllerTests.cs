@@ -1,5 +1,7 @@
-﻿using MetricsAgent.Controllers;
+﻿using AutoMapper;
+using MetricsAgent.Controllers;
 using MetricsAgent.Models;
+using MetricsAgent.Models.Dto;
 using MetricsAgent.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,12 +18,14 @@ namespace MetricsAgentTests
         private NetworkMetricsController _networkMetricsController;
         private Mock<ILogger<NetworkMetricsController>> _logger;
         private Mock<INetworkMetricsRepository> _repository;
+        private Mock<IMapper> _mapper;
 
         public NetworkMetricsControllerTests()
         {
             _logger = new Mock<ILogger<NetworkMetricsController>>();
             _repository = new Mock<INetworkMetricsRepository>();
-            _networkMetricsController = new NetworkMetricsController(_repository.Object, _logger.Object);
+            _mapper = new Mock<IMapper>();
+            _networkMetricsController = new NetworkMetricsController(_repository.Object, _logger.Object, _mapper.Object);
         }
 
         //[Fact]
@@ -43,7 +47,7 @@ namespace MetricsAgentTests
         [Fact]
         public void NetworkMetricsController_GetTest()
         {
-            Assert.IsAssignableFrom<ActionResult<IList<NetworkMetric>>>(_networkMetricsController.GetNetworkMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
+            Assert.IsAssignableFrom<ActionResult<IList<NetworkMetricDto>>>(_networkMetricsController.GetNetworkMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
         }
 
         [Fact]

@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using System.Data.SQLite;
+using MetricsAgent.Options;
+using AutoMapper;
 
 namespace MetricsAgent
 {
@@ -14,6 +16,19 @@ namespace MetricsAgent
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            #region Configure Automapper
+
+            // Create mapper configuration from our class MapperProfile
+            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
+
+            // Create mapper from our configuration
+            var mapper = mapperConfiguration.CreateMapper();
+            
+            // Register our mapper with the app as singletone 
+            builder.Services.AddSingleton(mapper);
+
+            #endregion
 
             #region Configure Repository
 
@@ -27,7 +42,18 @@ namespace MetricsAgent
 
             #region Configure Database
 
+            #region DatabaseOption
+
+            builder.Services.Configure<DatabaseOptions>(options =>
+            {
+                builder.Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
+            });
+
+            #endregion
+
+            #region CreateDatabase
             //ConfigureSqlLiteConnection(builder.Services);
+            #endregion
 
             #endregion
 
@@ -97,10 +123,16 @@ namespace MetricsAgent
         }
 
 
-        private static void ConfigureSqlLiteConnection(IServiceCollection services)
+        private static void ConfigureSqlLiteConnection(WebApplicationBuilder applicationBuilder)
         {
-            const string connectionString = "Data Source = metrics.db; Version = 3; Pooling = true; Max Pool Size = 100;";
-            var connection = new SQLiteConnection(connectionString);
+
+            //const string connectionString = "Data Source = metrics.db; Version = 3; Pooling = true; Max Pool Size = 100;";
+            //var connection = new SQLiteConnection(connectionString);
+            //connection.Open();
+            //PrepareSchema(connection
+            //
+
+            var connection = new SQLiteConnection(applicationBuilder.Configuration["Settings:DatabaseOptions:ConnectionString"].ToString());
             connection.Open();
             PrepareSchema(connection);
         }
