@@ -35,39 +35,6 @@ namespace MetricsAgent.Controllers
         }
 
         /// <summary>
-        /// Добавление значения в репозиторий
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] NetworkMetricCreateRequest request)
-        {
-            //_networkMetricsRepository.Create(new Models.NetworkMetric
-            //{
-            //    Value = request.Value,
-            //    Time = (int)request.Time.TotalSeconds
-            //});
-
-            _networkMetricsRepository.Create(_mapper.Map<NetworkMetric>(request));
-
-            _logger.LogInformation("Create network metrics add to repository call.");
-            return Ok();
-        }
-
-        /// <summary>
-        /// Удаление записи по id
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPut("delete")]
-        public IActionResult Delete([FromBody] NetworkMetricDeleteRequest request)
-        {
-            _networkMetricsRepository.Delete(request.Id);
-            _logger.LogInformation("Delete network metric call.");
-            return Ok();
-        }
-
-        /// <summary>
         /// Получить статистику по нагрузке на сеть за период
         /// </summary>
         /// <param name="fromTime">Время начала периода</param>
@@ -82,5 +49,50 @@ namespace MetricsAgent.Controllers
             return Ok(_networkMetricsRepository.GetByTimePeriod(fromTime, toTime).
                 Select(metric => _mapper.Map<NetworkMetricDto>(metric)).ToList());
         }
+
+        [HttpGet("all")]
+        public ActionResult<IList<NetworkMetricDto>> GetAllMetrics()
+        {
+            _logger.LogInformation("Get all Network metrics call.");
+
+            // Use Automapper
+            return Ok(_networkMetricsRepository.GetAll()
+                .Select(metric => _mapper.Map<NetworkMetricDto>(metric)).ToList());
+        }
+
+        ///// <summary>
+        ///// Добавление значения в репозиторий
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <returns></returns>
+        //[HttpPost("create")]
+        //public IActionResult Create([FromBody] NetworkMetricCreateRequest request)
+        //{
+        //    //_networkMetricsRepository.Create(new Models.NetworkMetric
+        //    //{
+        //    //    Value = request.Value,
+        //    //    Time = (int)request.Time.TotalSeconds
+        //    //});
+
+        //    _networkMetricsRepository.Create(_mapper.Map<NetworkMetric>(request));
+
+        //    _logger.LogInformation("Create network metrics add to repository call.");
+        //    return Ok();
+        //}
+
+        ///// <summary>
+        ///// Удаление записи по id
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <returns></returns>
+        //[HttpPut("delete")]
+        //public IActionResult Delete([FromBody] NetworkMetricDeleteRequest request)
+        //{
+        //    _networkMetricsRepository.Delete(request.Id);
+        //    _logger.LogInformation("Delete network metric call.");
+        //    return Ok();
+        //}
+
+
     }
 }

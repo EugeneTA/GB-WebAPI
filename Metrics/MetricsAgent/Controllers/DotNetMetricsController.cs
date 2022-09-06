@@ -35,40 +35,6 @@ namespace MetricsAgent.Controllers
         }
 
         /// <summary>
-        /// Добавление значения в репозиторий
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] DotNetMetricCreateRequest request)
-        {
-            //_dotNetMetricsRepository.Create(new Models.DotNetMetric
-            //{
-            //    Value = request.Value,
-            //    Time = (int)request.Time.TotalSeconds
-            //});
-
-            _dotNetMetricsRepository.Create(_mapper.Map<DotNetMetric>(request));
-
-            _logger.LogInformation("Create DotNet metrics add to repository call.");
-            return Ok();
-        }
-
-        /// <summary>
-        /// Удаление записи по id
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPut("delete")]
-        public IActionResult Delete([FromBody] DotNetMetricDeleteRequest request)
-        {
-            _dotNetMetricsRepository.Delete(request.Id);
-            _logger.LogInformation("Delete DotNet metric call.");
-            return Ok();
-        }
-
-
-        /// <summary>
         /// Получить статистику по ошибкам за период
         /// </summary>
         /// <param name="fromTime">Время начала периода</param>
@@ -84,5 +50,49 @@ namespace MetricsAgent.Controllers
             return Ok(_dotNetMetricsRepository.GetByTimePeriod(fromTime, toTime)
                 .Select(metric => _mapper.Map<DotNetMetricDto>(metric)).ToList());
         }
+
+        [HttpGet("all")]
+        public ActionResult<IList<DotNetMetricDto>> GetAllMetrics()
+        {
+            _logger.LogInformation("Get all DotNet metrics call.");
+
+            // Use Automapper
+            return Ok(_dotNetMetricsRepository.GetAll()
+                .Select(metric => _mapper.Map<DotNetMetricDto>(metric)).ToList());
+        }
+
+        ///// <summary>
+        ///// Добавление значения в репозиторий
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <returns></returns>
+        //[HttpPost("create")]
+        //public IActionResult Create([FromBody] DotNetMetricCreateRequest request)
+        //{
+        //    //_dotNetMetricsRepository.Create(new Models.DotNetMetric
+        //    //{
+        //    //    Value = request.Value,
+        //    //    Time = (int)request.Time.TotalSeconds
+        //    //});
+
+        //    _dotNetMetricsRepository.Create(_mapper.Map<DotNetMetric>(request));
+
+        //    _logger.LogInformation("Create DotNet metrics add to repository call.");
+        //    return Ok();
+        //}
+
+        ///// <summary>
+        ///// Удаление записи по id
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <returns></returns>
+        //[HttpPut("delete")]
+        //public IActionResult Delete([FromBody] DotNetMetricDeleteRequest request)
+        //{
+        //    _dotNetMetricsRepository.Delete(request.Id);
+        //    _logger.LogInformation("Delete DotNet metric call.");
+        //    return Ok();
+        //}
+
     }
 }

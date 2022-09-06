@@ -34,40 +34,6 @@ namespace MetricsAgent.Controllers
             _mapper = mapper;
         }
 
-
-        /// <summary>
-        /// Добавление значения в репозиторий
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] HddMetricCreateRequest request)
-        {
-            //_hddMetricsRepository.Create(new Models.HddMetric
-            //{
-            //    Value = request.Value,
-            //    Time = (int)request.Time.TotalSeconds
-            //});
-
-            _hddMetricsRepository.Create(_mapper.Map<HddMetric>(request));
-
-            _logger.LogInformation("Create hdd metrics add to repository call.");
-            return Ok();
-        }
-
-        /// <summary>
-        /// Удаление записи по id
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPut("delete")]
-        public IActionResult Delete([FromBody] HddMetricDeleteRequest request)
-        {
-            _hddMetricsRepository.Delete(request.Id);
-            _logger.LogInformation("Delete hdd metric call.");
-            return Ok();
-        }
-
         /// <summary>
         /// Получить статистику по нагрузке на HDD за период
         /// </summary>
@@ -84,5 +50,50 @@ namespace MetricsAgent.Controllers
             return Ok(_hddMetricsRepository.GetByTimePeriod(fromTime, toTime)
                 .Select(metric => _mapper.Map<HddMetricDto>(metric)).ToList());
         }
+
+        [HttpGet("all")]
+        public ActionResult<IList<HddMetricDto>> GetAllMetrics()
+        {
+            _logger.LogInformation("Get all Hdd metrics call.");
+
+            // Use Automapper
+            return Ok(_hddMetricsRepository.GetAll()
+                .Select(metric => _mapper.Map<HddMetricDto>(metric)).ToList());
+        }
+
+        ///// <summary>
+        ///// Добавление значения в репозиторий
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <returns></returns>
+        //[HttpPost("create")]
+        //public IActionResult Create([FromBody] HddMetricCreateRequest request)
+        //{
+        //    //_hddMetricsRepository.Create(new Models.HddMetric
+        //    //{
+        //    //    Value = request.Value,
+        //    //    Time = (int)request.Time.TotalSeconds
+        //    //});
+
+        //    _hddMetricsRepository.Create(_mapper.Map<HddMetric>(request));
+
+        //    _logger.LogInformation("Create hdd metrics add to repository call.");
+        //    return Ok();
+        //}
+
+        ///// <summary>
+        ///// Удаление записи по id
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <returns></returns>
+        //[HttpPut("delete")]
+        //public IActionResult Delete([FromBody] HddMetricDeleteRequest request)
+        //{
+        //    _hddMetricsRepository.Delete(request.Id);
+        //    _logger.LogInformation("Delete hdd metric call.");
+        //    return Ok();
+        //}
+
+
     }
 }

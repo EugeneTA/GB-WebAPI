@@ -36,15 +36,15 @@ namespace MetricsAgentTests
         //    Assert.IsAssignableFrom<IActionResult>(_hddMetricsController.GetHDDMetrics(fromTime, toTime));
         //}
 
-        [Fact]
-        public void HddMetricsController_CreateTest()
-        {
-            _repository.Setup(repository => repository.Create(It.IsAny<HddMetric>())).Verifiable();
+        //[Fact]
+        //public void HddMetricsController_CreateTest()
+        //{
+        //    _repository.Setup(repository => repository.Create(It.IsAny<HddMetric>())).Verifiable();
 
-            var result = _hddMetricsController.Create(new MetricsAgent.Models.Requests.HddMetricCreateRequest { Time = TimeSpan.FromSeconds(10), Value = 25 });
+        //    var result = _hddMetricsController.Create(new MetricsAgent.Models.Requests.HddMetricCreateRequest { Time = TimeSpan.FromSeconds(10), Value = 25 });
 
-            _repository.Verify(repository => repository.Create(It.IsAny<HddMetric>()), Times.AtMostOnce());
-        }
+        //    _repository.Verify(repository => repository.Create(It.IsAny<HddMetric>()), Times.AtMostOnce());
+        //}
 
         [Fact]
         public void HddMetricsController_GetTest()
@@ -52,14 +52,14 @@ namespace MetricsAgentTests
             Assert.IsAssignableFrom<ActionResult<IList<HddMetricDto>>>(_hddMetricsController.GetHddMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
         }
 
-        [Fact]
-        public void HddMetricsController_DeleteTest()
-        {
-            _repository.Setup(repository => repository.Delete(It.IsAny<int>())).Verifiable();
+        //[Fact]
+        //public void HddMetricsController_DeleteTest()
+        //{
+        //    _repository.Setup(repository => repository.Delete(It.IsAny<int>())).Verifiable();
 
-            var result = _hddMetricsController.Delete(new MetricsAgent.Models.Requests.Delete.HddMetricDeleteRequest { Id = 1 });
+        //    var result = _hddMetricsController.Delete(new MetricsAgent.Models.Requests.Delete.HddMetricDeleteRequest { Id = 1 });
 
-            _repository.Verify(repository => repository.Delete(It.IsAny<int>()), Times.AtMostOnce());
-        }
+        //    _repository.Verify(repository => repository.Delete(It.IsAny<int>()), Times.AtMostOnce());
+        //}
     }
 }

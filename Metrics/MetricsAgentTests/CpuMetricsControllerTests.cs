@@ -52,38 +52,34 @@ namespace MetricsAgentTests
         //    Assert.IsAssignableFrom<IActionResult>(result);
         //}
 
-        [Fact]
-        [Priority(1)]
-        public void CpuMetricsController_CreateTest()
-        {
-            _repository.Setup(repository => repository.Create(It.IsAny<CpuMetric>())).Verifiable();
+        //[Fact]
+        //[Priority(1)]
+        //public void CpuMetricsController_CreateTest()
+        //{
+        //    _repository.Setup(repository => repository.Create(It.IsAny<CpuMetric>())).Verifiable();
 
-            var result = _cpuMetricsController.Create(new MetricsAgent.Models.Requests.CpuMetricCreateRequest { Time = TimeSpan.FromSeconds(10), Value = 25 });
+        //    var result = _cpuMetricsController.Create(new MetricsAgent.Models.Requests.CpuMetricCreateRequest { Time = TimeSpan.FromSeconds(10), Value = 25 });
 
-            _repository.Verify(repository => repository.Create(It.IsAny<CpuMetric>()), Times.AtMostOnce());
-        }
+        //    _repository.Verify(repository => repository.Create(It.IsAny<CpuMetric>()), Times.AtMostOnce());
+        //}
 
         [Fact]
         [Priority(2)]
         public void CpuMetricsController_GetTest()
         {
-            _repository.Setup(repository => repository.Create(It.IsAny<CpuMetric>())).Verifiable();
-
-            var result = _cpuMetricsController.Create(new MetricsAgent.Models.Requests.CpuMetricCreateRequest { Time = TimeSpan.FromSeconds(10), Value = 25 });
-
             Assert.IsAssignableFrom<ActionResult<IList<CpuMetricDto>>>(_cpuMetricsController.GetCpuMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(1000)));
         }
 
-        [Fact]
-        [Priority(3)]
-        public void CpuMetricsController_DeleteTest()
-        {
-            _repository.Setup(repository => repository.Delete(It.IsAny<int>())).Verifiable();
+        //[Fact]
+        //[Priority(3)]
+        //public void CpuMetricsController_DeleteTest()
+        //{
+        //    _repository.Setup(repository => repository.Delete(It.IsAny<int>())).Verifiable();
 
-            var result = _cpuMetricsController.Delete(new MetricsAgent.Models.Requests.Delete.CpuMetricDeleteRequest { Id = 1 });
+        //    var result = _cpuMetricsController.Delete(new MetricsAgent.Models.Requests.Delete.CpuMetricDeleteRequest { Id = 1 });
 
-            _repository.Verify(repository => repository.Delete(It.IsAny<int>()), Times.AtMostOnce());
-        }
+        //    _repository.Verify(repository => repository.Delete(It.IsAny<int>()), Times.AtMostOnce());
+        //}
 
     }
 
