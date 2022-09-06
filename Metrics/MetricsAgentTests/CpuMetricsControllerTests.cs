@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 using MetricsAgent.Services;
 using MetricsAgent.Models;
 using Moq;
+using MetricsAgent.Models.Dto;
+using AutoMapper;
+using MetricsAgent;
+using Xunit.Priority;
 
 namespace MetricsAgentTests
 {
@@ -25,12 +29,18 @@ namespace MetricsAgentTests
         private CpuMetricsController _cpuMetricsController;
         private Mock<ILogger<CpuMetricsController>> _logger;
         private Mock<ICpuMetricsRepository> _repository;
+        private Mock<IMapper> _mapper;
 
         public CpuMetricsControllerTests()
         {
             _logger = new Mock<ILogger<CpuMetricsController>>();
             _repository = new Mock<ICpuMetricsRepository>();
-            _cpuMetricsController = new CpuMetricsController(_repository.Object, _logger.Object);
+            _mapper = new Mock<IMapper>();
+            //var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
+            //// Create mapper from our configuration
+            //_mapper = mapperConfiguration.CreateMapper();
+
+            _cpuMetricsController = new CpuMetricsController(_repository.Object, _logger.Object, _mapper.Object);
         }
 
         //[Fact]
@@ -43,6 +53,7 @@ namespace MetricsAgentTests
         //}
 
         [Fact]
+        [Priority(1)]
         public void CpuMetricsController_CreateTest()
         {
             _repository.Setup(repository => repository.Create(It.IsAny<CpuMetric>())).Verifiable();
@@ -53,12 +64,18 @@ namespace MetricsAgentTests
         }
 
         [Fact]
+        [Priority(2)]
         public void CpuMetricsController_GetTest()
         {
-            Assert.IsAssignableFrom<ActionResult<IList<CpuMetric>>>(_cpuMetricsController.GetCpuMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
+            _repository.Setup(repository => repository.Create(It.IsAny<CpuMetric>())).Verifiable();
+
+            var result = _cpuMetricsController.Create(new MetricsAgent.Models.Requests.CpuMetricCreateRequest { Time = TimeSpan.FromSeconds(10), Value = 25 });
+
+            Assert.IsAssignableFrom<ActionResult<IList<CpuMetricDto>>>(_cpuMetricsController.GetCpuMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(1000)));
         }
 
         [Fact]
+        [Priority(3)]
         public void CpuMetricsController_DeleteTest()
         {
             _repository.Setup(repository => repository.Delete(It.IsAny<int>())).Verifiable();

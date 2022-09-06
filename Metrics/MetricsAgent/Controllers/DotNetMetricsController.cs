@@ -1,4 +1,6 @@
-﻿using MetricsAgent.Models;
+﻿using AutoMapper;
+using MetricsAgent.Models;
+using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
 using MetricsAgent.Models.Requests.Delete;
 using MetricsAgent.Services;
@@ -18,13 +20,18 @@ namespace MetricsAgent.Controllers
 
         private readonly ILogger<DotNetMetricsController> _logger;
         private readonly IDotNetMetricsRepository _dotNetMetricsRepository;
+        private readonly IMapper _mapper;
 
         #endregion
 
-        public DotNetMetricsController(IDotNetMetricsRepository dotNetMetricsRepository, ILogger<DotNetMetricsController> logger)
+        public DotNetMetricsController(
+            IDotNetMetricsRepository dotNetMetricsRepository, 
+            ILogger<DotNetMetricsController> logger,
+            IMapper mapper)
         {
             _logger = logger;
             _dotNetMetricsRepository = dotNetMetricsRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -35,11 +42,14 @@ namespace MetricsAgent.Controllers
         [HttpPost("create")]
         public IActionResult Create([FromBody] DotNetMetricCreateRequest request)
         {
-            _dotNetMetricsRepository.Create(new Models.DotNetMetric
-            {
-                Value = request.Value,
-                Time = (int)request.Time.TotalSeconds
-            });
+            //_dotNetMetricsRepository.Create(new Models.DotNetMetric
+            //{
+            //    Value = request.Value,
+            //    Time = (int)request.Time.TotalSeconds
+            //});
+
+            _dotNetMetricsRepository.Create(_mapper.Map<DotNetMetric>(request));
+
             _logger.LogInformation("Create DotNet metrics add to repository call.");
             return Ok();
         }
@@ -65,11 +75,14 @@ namespace MetricsAgent.Controllers
         /// <param name="toTime">Время окончания периода</param>
         /// <returns></returns>
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public ActionResult<IList<DotNetMetric>> GetDotNetMetrics(
+        public ActionResult<IList<DotNetMetricDto>> GetDotNetMetrics(
             [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
             _logger.LogInformation("Get DotNet metrics call.");
-            return Ok(_dotNetMetricsRepository.GetByTimePeriod(fromTime, toTime));
+            //return Ok(_dotNetMetricsRepository.GetByTimePeriod(fromTime, toTime));
+
+            return Ok(_dotNetMetricsRepository.GetByTimePeriod(fromTime, toTime)
+                .Select(metric => _mapper.Map<DotNetMetricDto>(metric)).ToList());
         }
     }
 }

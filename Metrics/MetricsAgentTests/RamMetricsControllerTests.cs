@@ -1,5 +1,7 @@
-﻿using MetricsAgent.Controllers;
+﻿using AutoMapper;
+using MetricsAgent.Controllers;
 using MetricsAgent.Models;
+using MetricsAgent.Models.Dto;
 using MetricsAgent.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,12 +18,15 @@ namespace MetricsAgentTests
         private RamMetricsController _ramMetricsController;
         private Mock<ILogger<RamMetricsController>> _logger;
         private Mock<IRamMetricsRepository> _repository;
+        private Mock<IMapper> _mapper;
+
 
         public RamMetricsControllerTests()
         {
             _logger = new Mock<ILogger<RamMetricsController>>();
             _repository = new Mock<IRamMetricsRepository>();
-            _ramMetricsController = new RamMetricsController(_repository.Object, _logger.Object);
+            _mapper = new Mock<IMapper>();
+            _ramMetricsController = new RamMetricsController(_repository.Object, _logger.Object, _mapper.Object);
         }
 
         //[Fact]
@@ -43,7 +48,7 @@ namespace MetricsAgentTests
         [Fact]
         public void RamMetricsController_GetTest()
         {
-            Assert.IsAssignableFrom<ActionResult<IList<RamMetric>>>(_ramMetricsController.GetRamMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
+            Assert.IsAssignableFrom<ActionResult<IList<RamMetricDto>>>(_ramMetricsController.GetRamMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
         }
 
         [Fact]

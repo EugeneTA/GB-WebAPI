@@ -1,5 +1,7 @@
-﻿using MetricsAgent.Controllers;
+﻿using AutoMapper;
+using MetricsAgent.Controllers;
 using MetricsAgent.Models;
+using MetricsAgent.Models.Dto;
 using MetricsAgent.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,12 +18,14 @@ namespace MetricsAgentTests
         private DotNetMetricsController _dotNetMetricsController;
         private Mock<ILogger<DotNetMetricsController>> _logger;
         private Mock<IDotNetMetricsRepository> _repository;
+        private Mock<IMapper> _mapper;
 
         public DotNetMetricsControllerTests()
         {
             _logger = new Mock<ILogger<DotNetMetricsController>>();
             _repository = new Mock<IDotNetMetricsRepository>();
-            _dotNetMetricsController = new DotNetMetricsController(_repository.Object, _logger.Object);
+            _mapper = new Mock<IMapper>();
+            _dotNetMetricsController = new DotNetMetricsController(_repository.Object, _logger.Object, _mapper.Object);
         }
 
         //[Fact]
@@ -43,7 +47,7 @@ namespace MetricsAgentTests
         [Fact]
         public void DotNetMetricsController_GetTest()
         {
-            Assert.IsAssignableFrom<ActionResult<IList<DotNetMetric>>>(_dotNetMetricsController.GetDotNetMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
+            Assert.IsAssignableFrom<ActionResult<IList<DotNetMetricDto>>>(_dotNetMetricsController.GetDotNetMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
         }
 
         [Fact]
