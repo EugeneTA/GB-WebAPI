@@ -35,39 +35,6 @@ namespace MetricsAgent.Controllers
         }
 
         /// <summary>
-        /// Добавление значения в репозиторий
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] RamMetricCreateRequest request)
-        {
-            //_ramMetricsRepository.Create(new Models.RamMetric
-            //{
-            //    Value = request.Value,
-            //    Time = (int)request.Time.TotalSeconds
-            //});
-
-            _ramMetricsRepository.Create(_mapper.Map<RamMetric>(request));
-
-            _logger.LogInformation("Create ram metrics add to repository call.");
-            return Ok();
-        }
-
-        /// <summary>
-        /// Удаление записи по id
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPut("delete")]
-        public IActionResult Delete([FromBody] RamMetricDeleteRequest request)
-        {
-            _ramMetricsRepository.Delete(request.Id);
-            _logger.LogInformation("Delete ram metric call.");
-            return Ok();
-        }
-
-        /// <summary>
         /// Получить статистику по загрузке памяти за период
         /// </summary>
         /// <param name="fromTime">Время начала периода</param>
@@ -82,5 +49,50 @@ namespace MetricsAgent.Controllers
             return Ok(_ramMetricsRepository.GetByTimePeriod(fromTime, toTime)
                 .Select(metric => _mapper.Map<RamMetricDto>(metric)).ToList());
         }
+
+        [HttpGet("all")]
+        public ActionResult<IList<RamMetricDto>> GetAllMetrics()
+        {
+            _logger.LogInformation("Get all Ram metrics call.");
+
+            // Use Automapper
+            return Ok(_ramMetricsRepository.GetAll()
+                .Select(metric => _mapper.Map<RamMetricDto>(metric)).ToList());
+        }
+
+        ///// <summary>
+        ///// Добавление значения в репозиторий
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <returns></returns>
+        //[HttpPost("create")]
+        //public IActionResult Create([FromBody] RamMetricCreateRequest request)
+        //{
+        //    //_ramMetricsRepository.Create(new Models.RamMetric
+        //    //{
+        //    //    Value = request.Value,
+        //    //    Time = (int)request.Time.TotalSeconds
+        //    //});
+
+        //    _ramMetricsRepository.Create(_mapper.Map<RamMetric>(request));
+
+        //    _logger.LogInformation("Create ram metrics add to repository call.");
+        //    return Ok();
+        //}
+
+        ///// <summary>
+        ///// Удаление записи по id
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <returns></returns>
+        //[HttpPut("delete")]
+        //public IActionResult Delete([FromBody] RamMetricDeleteRequest request)
+        //{
+        //    _ramMetricsRepository.Delete(request.Id);
+        //    _logger.LogInformation("Delete ram metric call.");
+        //    return Ok();
+        //}
+
+
     }
 }

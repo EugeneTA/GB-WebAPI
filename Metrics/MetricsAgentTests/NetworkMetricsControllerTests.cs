@@ -34,15 +34,15 @@ namespace MetricsAgentTests
         //    Assert.IsAssignableFrom<IActionResult>(_networkMetricsController.GetNetworkActions(new TimeSpan(1), new TimeSpan(200)));
         //}
 
-        [Fact]
-        public void NetworkMetricsController_CreateTest()
-        {
-            _repository.Setup(repository => repository.Create(It.IsAny<NetworkMetric>())).Verifiable();
+        //[Fact]
+        //public void NetworkMetricsController_CreateTest()
+        //{
+        //    _repository.Setup(repository => repository.Create(It.IsAny<NetworkMetric>())).Verifiable();
 
-            var result = _networkMetricsController.Create(new MetricsAgent.Models.Requests.NetworkMetricCreateRequest { Time = TimeSpan.FromSeconds(10), Value = 25 });
+        //    var result = _networkMetricsController.Create(new MetricsAgent.Models.Requests.NetworkMetricCreateRequest { Time = TimeSpan.FromSeconds(10), Value = 25 });
 
-            _repository.Verify(repository => repository.Create(It.IsAny<NetworkMetric>()), Times.AtMostOnce());
-        }
+        //    _repository.Verify(repository => repository.Create(It.IsAny<NetworkMetric>()), Times.AtMostOnce());
+        //}
 
         [Fact]
         public void NetworkMetricsController_GetTest()
@@ -50,14 +50,14 @@ namespace MetricsAgentTests
             Assert.IsAssignableFrom<ActionResult<IList<NetworkMetricDto>>>(_networkMetricsController.GetNetworkMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100)));
         }
 
-        [Fact]
-        public void NetworkMetricsController_DeleteTest()
-        {
-            _repository.Setup(repository => repository.Delete(It.IsAny<int>())).Verifiable();
+        //[Fact]
+        //public void NetworkMetricsController_DeleteTest()
+        //{
+        //    _repository.Setup(repository => repository.Delete(It.IsAny<int>())).Verifiable();
 
-            var result = _networkMetricsController.Delete(new MetricsAgent.Models.Requests.Delete.NetworkMetricDeleteRequest { Id = 1 });
+        //    var result = _networkMetricsController.Delete(new MetricsAgent.Models.Requests.Delete.NetworkMetricDeleteRequest { Id = 1 });
 
-            _repository.Verify(repository => repository.Delete(It.IsAny<int>()), Times.AtMostOnce());
-        }
+        //    _repository.Verify(repository => repository.Delete(It.IsAny<int>()), Times.AtMostOnce());
+        //}
     }
 }

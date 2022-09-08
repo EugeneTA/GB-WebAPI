@@ -33,40 +33,6 @@ namespace MetricsAgent.Controllers
         }
 
         /// <summary>
-        /// Добавление значения в репозиторий
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] CpuMetricCreateRequest request)
-        {
-            //_cpuMetricsRepository.Create(new Models.CpuMetric
-            //{
-            //    Value = request.Value,
-            //    Time = (int)request.Time.TotalSeconds
-            //});
-
-            // Use Automapper
-            _cpuMetricsRepository.Create(_mapper.Map<CpuMetric>(request));
-
-            _logger.LogInformation("Create cpu metrics add to repository call.");
-            return Ok();
-        }
-
-        /// <summary>
-        /// Удаление записи по id
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPut("delete")]
-        public IActionResult Delete([FromBody] CpuMetricDeleteRequest request)
-        {
-            _cpuMetricsRepository.Delete(request.Id);
-            _logger.LogInformation("Delete cpu metric call.");
-            return Ok();
-        }
-
-        /// <summary>
         /// Получить статистику по нагрузке на ЦП за период
         /// </summary>
         /// <param name="fromTime">Время начала периода</param>
@@ -83,6 +49,52 @@ namespace MetricsAgent.Controllers
             return Ok(_cpuMetricsRepository.GetByTimePeriod(fromTime, toTime)
                 .Select(metric => _mapper.Map<CpuMetricDto>(metric)).ToList());
         }
+
+        [HttpGet("all")]
+        public ActionResult<IList<CpuMetricDto>> GetAllMetrics()
+        {
+            _logger.LogInformation("Get all cpu metrics call.");
+            //return Ok(_cpuMetricsRepository.GetByTimePeriod(fromTime, toTime));
+
+            // Use Automapper
+            return Ok(_cpuMetricsRepository.GetAll()
+                .Select(metric => _mapper.Map<CpuMetricDto>(metric)).ToList());
+        }
+
+
+        ///// <summary>
+        ///// Добавление значения в репозиторий
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <returns></returns>
+        //[HttpPost("create")]
+        //public IActionResult Create([FromBody] CpuMetricCreateRequest request)
+        //{
+        //    //_cpuMetricsRepository.Create(new Models.CpuMetric
+        //    //{
+        //    //    Value = request.Value,
+        //    //    Time = (int)request.Time.TotalSeconds
+        //    //});
+
+        //    // Use Automapper
+        //    _cpuMetricsRepository.Create(_mapper.Map<CpuMetric>(request));
+
+        //    _logger.LogInformation("Create cpu metrics add to repository call.");
+        //    return Ok();
+        //}
+
+        ///// <summary>
+        ///// Удаление записи по id
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <returns></returns>
+        //[HttpPut("delete")]
+        //public IActionResult Delete([FromBody] CpuMetricDeleteRequest request)
+        //{
+        //    _cpuMetricsRepository.Delete(request.Id);
+        //    _logger.LogInformation("Delete cpu metric call.");
+        //    return Ok();
+        //}
 
     }
 }

@@ -17,19 +17,19 @@ namespace MetricsAgent
 
             CreateMap<CpuMetricCreateRequest, CpuMetric>()
                 .ForMember(x => x.Value, opt => opt.MapFrom(src => src.Value))
-                .ForMember(x => x.Time, opt => opt.MapFrom(src => (int)src.Time.TotalSeconds));
+                .ForMember(x => x.Time, opt => opt.MapFrom(src => (long)src.Time.TotalSeconds));
             CreateMap<DotNetMetricCreateRequest, DotNetMetric>()
                 .ForMember(x => x.Value, opt => opt.MapFrom(src => src.Value))
-                .ForMember(x => x.Time, opt => opt.MapFrom(src => (int)src.Time.TotalSeconds));
+                .ForMember(x => x.Time, opt => opt.MapFrom(src => (long)src.Time.TotalSeconds));
             CreateMap<HddMetricCreateRequest, HddMetric>()
                 .ForMember(x => x.Value, opt => opt.MapFrom(src => src.Value))
-                .ForMember(x => x.Time, opt => opt.MapFrom(src => (int)src.Time.TotalSeconds));
+                .ForMember(x => x.Time, opt => opt.MapFrom(src => (long)src.Time.TotalSeconds));
             CreateMap<NetworkMetricCreateRequest, NetworkMetric>()
                 .ForMember(x => x.Value, opt => opt.MapFrom(src => src.Value))
-                .ForMember(x => x.Time, opt => opt.MapFrom(src => (int)src.Time.TotalSeconds));
+                .ForMember(x => x.Time, opt => opt.MapFrom(src => (long)src.Time.TotalSeconds));
             CreateMap<RamMetricCreateRequest, RamMetric>()
                 .ForMember(x => x.Value, opt => opt.MapFrom(src => src.Value))
-                .ForMember(x => x.Time, opt => opt.MapFrom(src => (int)src.Time.TotalSeconds));
+                .ForMember(x => x.Time, opt => opt.MapFrom(src => (long)src.Time.TotalSeconds));
         }
     }
 }
