@@ -4,6 +4,7 @@ using MetricsAgent.Models;
 using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
 using MetricsAgent.Models.Requests.Delete;
+using MetricsAgent.Models.Requests.Response;
 using MetricsAgent.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,26 +40,46 @@ namespace MetricsAgent.Controllers
         /// <param name="toTime">Время окончания периода</param>
         /// <returns></returns>
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public ActionResult<IList<CpuMetricDto>> GetCpuMetrics(
+        public ActionResult<CpuMetricsResponse> GetCpuMetrics(
             [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
             _logger.LogInformation("Get cpu metrics call.");
             //return Ok(_cpuMetricsRepository.GetByTimePeriod(fromTime, toTime));
 
             // Use Automapper
-            return Ok(_cpuMetricsRepository.GetByTimePeriod(fromTime, toTime)
-                .Select(metric => _mapper.Map<CpuMetricDto>(metric)).ToList());
+            return Ok(new CpuMetricsResponse()
+            {
+                Metrics = _cpuMetricsRepository.GetByTimePeriod(fromTime, toTime)
+                .Select(metric => _mapper.Map<CpuMetricDto>(metric)).ToList()
+            });
+
+            //Random random = new Random();
+            //switch (random.Next(2))
+            //{
+            //    case 0:
+            //        return Ok(new CpuMetricsResponse
+            //        {
+            //            Metrics = _cpuMetricsRepository.GetByTimePeriod(fromTime, toTime)
+            //            .Select(metric => _mapper.Map<CpuMetricDto>(metric)).ToList()
+            //        });
+            //    case 1:
+            //        return BadRequest();
+            //}
+            //return BadRequest();
         }
 
         [HttpGet("all")]
-        public ActionResult<IList<CpuMetricDto>> GetAllMetrics()
+        public ActionResult<CpuMetricsResponse> GetAllMetrics()
         {
             _logger.LogInformation("Get all cpu metrics call.");
             //return Ok(_cpuMetricsRepository.GetByTimePeriod(fromTime, toTime));
 
             // Use Automapper
-            return Ok(_cpuMetricsRepository.GetAll()
-                .Select(metric => _mapper.Map<CpuMetricDto>(metric)).ToList());
+            return Ok(new CpuMetricsResponse()
+            {
+                Metrics = _cpuMetricsRepository.GetAll()
+                .Select(metric => _mapper.Map<CpuMetricDto>(metric)).ToList()
+            } );
         }
 
 

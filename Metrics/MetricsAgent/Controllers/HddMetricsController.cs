@@ -3,6 +3,7 @@ using MetricsAgent.Models;
 using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
 using MetricsAgent.Models.Requests.Delete;
+using MetricsAgent.Models.Requests.Response;
 using MetricsAgent.Services;
 using MetricsAgent.Services.Implemetation;
 using Microsoft.AspNetCore.Http;
@@ -41,24 +42,30 @@ namespace MetricsAgent.Controllers
         /// <param name="toTime">Время окончания периода</param>
         /// <returns></returns>
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public ActionResult<IList<HddMetricDto>> GetHddMetrics(
+        public ActionResult<HddMetricsResponse> GetHddMetrics(
             [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
             _logger.LogInformation("Get hdd metrics call.");
             //return Ok(_hddMetricsRepository.GetByTimePeriod(fromTime,toTime));
 
-            return Ok(_hddMetricsRepository.GetByTimePeriod(fromTime, toTime)
-                .Select(metric => _mapper.Map<HddMetricDto>(metric)).ToList());
+            return Ok(new HddMetricsResponse()
+            {
+                Metrics = _hddMetricsRepository.GetByTimePeriod(fromTime, toTime)
+                .Select(metric => _mapper.Map<HddMetricDto>(metric)).ToList()
+            });
         }
 
         [HttpGet("all")]
-        public ActionResult<IList<HddMetricDto>> GetAllMetrics()
+        public ActionResult<HddMetricsResponse> GetAllMetrics()
         {
             _logger.LogInformation("Get all Hdd metrics call.");
 
             // Use Automapper
-            return Ok(_hddMetricsRepository.GetAll()
-                .Select(metric => _mapper.Map<HddMetricDto>(metric)).ToList());
+            return Ok(new HddMetricsResponse()
+            {
+                Metrics = _hddMetricsRepository.GetAll()
+                .Select(metric => _mapper.Map<HddMetricDto>(metric)).ToList()
+            });
         }
 
         ///// <summary>
