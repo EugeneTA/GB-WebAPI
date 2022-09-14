@@ -3,6 +3,7 @@ using MetricsAgent.Models;
 using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
 using MetricsAgent.Models.Requests.Delete;
+using MetricsAgent.Models.Requests.Response;
 using MetricsAgent.Services;
 using MetricsAgent.Services.Implemetation;
 using Microsoft.AspNetCore.Http;
@@ -41,23 +42,29 @@ namespace MetricsAgent.Controllers
         /// <param name="toTime">Время окончания периода</param>
         /// <returns></returns>
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public ActionResult<IList<NetworkMetricDto>> GetNetworkMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+        public ActionResult<NetworkMetricsResponse> GetNetworkMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
             _logger.LogInformation("Get network metrics call.");
             //return Ok(_networkMetricsRepository.GetByTimePeriod(fromTime,toTime));
 
-            return Ok(_networkMetricsRepository.GetByTimePeriod(fromTime, toTime).
-                Select(metric => _mapper.Map<NetworkMetricDto>(metric)).ToList());
+            return Ok(new NetworkMetricsResponse()
+            {
+                Metrics = _networkMetricsRepository.GetByTimePeriod(fromTime, toTime).
+                Select(metric => _mapper.Map<NetworkMetricDto>(metric)).ToList()
+            });
         }
 
         [HttpGet("all")]
-        public ActionResult<IList<NetworkMetricDto>> GetAllMetrics()
+        public ActionResult<NetworkMetricsResponse> GetAllMetrics()
         {
             _logger.LogInformation("Get all Network metrics call.");
 
             // Use Automapper
-            return Ok(_networkMetricsRepository.GetAll()
-                .Select(metric => _mapper.Map<NetworkMetricDto>(metric)).ToList());
+            return Ok(new NetworkMetricsResponse()
+            {
+                Metrics = _networkMetricsRepository.GetAll()
+                .Select(metric => _mapper.Map<NetworkMetricDto>(metric)).ToList()
+            });
         }
 
         ///// <summary>

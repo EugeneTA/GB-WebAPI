@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MetricsManager.Models.Metrics;
+using MetricsManager.Models.Requests.Requests;
+using MetricsManager.Models.Requests.Response;
+using MetricsManager.Services;
+using MetricsManager.Services.Client;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MetricsManager.Controllers
@@ -7,20 +12,47 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class HddMetricsController : ControllerBase
     {
-        //TODO: Доработать ...
+        private readonly IHddMetricsAgentClient _metricAgentClient;
+        private readonly IMetricAgentRepository _metricAgentRepository;
+
+        public HddMetricsController(
+            IHddMetricsAgentClient metricAgentClient,
+            IMetricAgentRepository metricAgentRepository)
+        {
+            _metricAgentClient = metricAgentClient;
+            _metricAgentRepository = metricAgentRepository;
+        }
 
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromAgent(
-    [FromRoute] int agentId, [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+        public ActionResult<HddMetricsResponse> GetMetricsFromAgent(
+            [FromRoute] int agentId, [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            return Ok();
+            HddMetricsResponse hddMetricsResponse = _metricAgentClient.GetMetrics(new HddMetricsRequest()
+            {
+                AgentId = agentId,
+                FromTime = fromTime,
+                ToTime = toTime
+            });
+
+            return hddMetricsResponse == null ? BadRequest() : Ok(hddMetricsResponse);
         }
 
         [HttpGet("all/from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromAll(
+        public ActionResult<IList<HddMetricsResponse>> GetMetricsFromAll(
             [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            return Ok();
+            return Ok(_metricAgentRepository.GetAll().Select(agent =>
+            {
+                var metrics = _metricAgentClient.GetMetrics(new HddMetricsRequest()
+                {
+                    AgentId = agent.AgentId,
+                    FromTime = fromTime,
+                    ToTime = toTime
+                });
+
+                return (metrics != null) ? metrics : new HddMetricsResponse() { AgentId = agent.AgentId, Metrics = new HddMetric[0] };
+            }).ToList());
         }
+
     }
 }
