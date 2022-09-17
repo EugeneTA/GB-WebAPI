@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsManager", "MetricsManager\MetricsManager.csproj", "{F92910EB-CE98-4AB2-8C44-4B69D3295317}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsManager", "MetricsManager\MetricsManager.csproj", "{F92910EB-CE98-4AB2-8C44-4B69D3295317}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsManagerTests", "MetricsManagerTests\MetricsManagerTests.csproj", "{4AE79594-F05D-42FD-8627-002E47871217}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsManagerTests", "MetricsManagerTests\MetricsManagerTests.csproj", "{4AE79594-F05D-42FD-8627-002E47871217}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsAgent", "MetricsAgent\MetricsAgent.csproj", "{F40E9EE4-91EF-4135-A27A-E39213A97365}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsAgent", "MetricsAgent\MetricsAgent.csproj", "{F40E9EE4-91EF-4135-A27A-E39213A97365}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsAgentTests", "MetricsAgentTests\MetricsAgentTests.csproj", "{20784499-08AA-4F7D-BD58-2543C096E471}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsAgentTests", "MetricsAgentTests\MetricsAgentTests.csproj", "{20784499-08AA-4F7D-BD58-2543C096E471}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsManager.Client", "MetricsManager.Client\MetricsManager.Client.csproj", "{C91FE454-9DCF-4EE0-9601-66F589AF2E0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{20784499-08AA-4F7D-BD58-2543C096E471}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20784499-08AA-4F7D-BD58-2543C096E471}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20784499-08AA-4F7D-BD58-2543C096E471}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C91FE454-9DCF-4EE0-9601-66F589AF2E0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C91FE454-9DCF-4EE0-9601-66F589AF2E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C91FE454-9DCF-4EE0-9601-66F589AF2E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C91FE454-9DCF-4EE0-9601-66F589AF2E0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
