@@ -267,6 +267,8 @@ namespace MetricsManager
             #endregion
 
             app.Run();
+
+            Console.ReadKey();
         }
     }
 }
